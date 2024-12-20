@@ -1,6 +1,5 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
+/// The main library file for the pubspec_checker package.
+/// This library exports all utility files required for platform checking.
 library pubspec_checker;
 
 export 'src/package_platform.dart';

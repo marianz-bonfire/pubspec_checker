@@ -1,8 +1,11 @@
 name: pubspec_checker
-description: A simple package that checks the compatibility of all dependencies in the pubspec.yaml file for specified platforms. This package reads the pubspec.yaml file, fetches the package information from pub.dev, and verifies the platforms (like Android, iOS, web, macOS, Windows, and Linux) against the provided list.
-version: 1.0.0
-# homepage: https://www.example.com
+description: A simple Dart package that checks the compatibility of all dependencies in the pubspec.yaml file for specified platforms
+version: 1.0.1
 repository: https://github.com/marianz-bonfire/pubspec_checker
+homepage: https://github.com/marianz-bonfire/pubspec_checker
+issue_tracker: https://github.com/marianz-bonfire/pubspec_checker/issues
+authors:
+  - Tarsier Marianz <mariano.degracia.bonfire@gmail.com>
 
 environment:
   sdk: '>=2.18.6 <3.0.0'
@@ -17,3 +20,20 @@ dependencies:
   args: ^2.4.1
   http: ^0.13.5
   yaml: ^3.1.1
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.marianz.pubspec_checker
+        pluginClass: PubspecCheckerPlugin
+      ios:
+        pluginClass: PubspecCheckerPlugin
+      web:
+        pluginClass: PubspecCheckerPlugin
+      macos:
+        pluginClass: PubspecCheckerPlugin
+      windows:
+        pluginClass: PubspecCheckerPlugin
+      linux:
+        pluginClass: PubspecCheckerPlugin

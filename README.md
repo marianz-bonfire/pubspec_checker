@@ -1,4 +1,6 @@
 # pubspec_checker
+[![pub package](https://img.shields.io/pub/v/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker)
+
 A simple Flutter package that checks the compatibility of all dependencies in the `pubspec.yaml` file for specified platforms. This package reads the `pubspec.yaml` file, fetches the package information from `pub.dev`, and verifies the platforms (like `Android`, `iOS`, `web`, `macOS`, `Windows`, and `Linux`) against the provided list.
 <!-- 
 This README describes the package. If you publish this package to pub.dev,
@@ -60,7 +62,7 @@ _Parameters_
 
 _Options_
 - `-s` or `--show`: Display the list of packages with their supported platforms.
-- `--l` or `--links`: Display the links to the package details.
+- `-l` or `--links`: Display the links to the package details.
 
 ## Examples
 Check compatibility for `android` and `ios`:

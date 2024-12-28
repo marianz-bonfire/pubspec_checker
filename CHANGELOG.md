@@ -1,3 +1,7 @@
+## 1.0.4
+### Fixed
+* Fixed lint reported warning
+
 ## 1.0.3
 ### Added
 + Added `macos` check support

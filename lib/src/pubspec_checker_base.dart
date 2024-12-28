@@ -131,10 +131,8 @@ class PackageChecker {
         .reduce((a, b) => a > b ? a : b);
 
     for (final entry in compatibility.entries) {
-      var link = showLink ? 'https://pub.dev/packages/${entry.key}' : '';
       var supportedPlatforms = entry.value['platforms'];
       if (supportedPlatforms.isNotEmpty) {
-        String supportedPlatformNames = supportedPlatforms.toString();
         if (checker.isCompatible(supportedPlatforms)) {
           supportedList.add(entry);
         } else {

@@ -167,7 +167,6 @@ class PackageChecker {
     if (unknownList.isNotEmpty) {
       for (var package in unknownList) {
         var link = showLink ? 'https://pub.dev/packages/${package.key}' : '';
-        var supportedPlatformNames = package.value['platforms'].toString();
         print(
             '$yellow ❓ ${package.key.padRight(maxWidth)}\t${'[unknown]'.padRight(maxPlatformsWidth)}\t$link$reset');
       }

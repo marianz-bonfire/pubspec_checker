@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker)
 [![package publisher](https://img.shields.io/pub/publisher/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker/publisher)
 
-<img height="200" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
+<img height="260" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
 
 
 
@@ -41,7 +41,7 @@ Add `pubspec_checker` to your Flutter or Dart project:
 
 ```yaml
 dev_dependencies:
-  pubspec_checker: ^1.0.0
+  pubspec_checker: ^1.0.4
 ```
 Run this command:
 ```bash

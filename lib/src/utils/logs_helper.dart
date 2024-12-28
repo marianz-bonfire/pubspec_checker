@@ -33,7 +33,6 @@ class LogPrintHelper {
     int leftDashLength = totalDashLength ~/ 2;
     int rightDashLength = totalDashLength - leftDashLength;
 
-    print(
-        '$yellow${'-' * leftDashLength} $text ${'-' * rightDashLength}$reset');
+    print('$blue${'-' * leftDashLength} $text ${'-' * rightDashLength}$reset');
   }
 }

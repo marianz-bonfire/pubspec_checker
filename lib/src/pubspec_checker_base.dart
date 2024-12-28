@@ -46,15 +46,23 @@ class PackageChecker {
     // Lists to track supported and unsupported packages.
     List<String> supportedList = [];
     List<String> notSupportedList = [];
+    List<MapEntry<String, Map<String, dynamic>>> unknownList = [];
 
+    int maxWidth = compatibility.entries
+        .map((pkg) => pkg.key.length)
+        .reduce((a, b) => a > b ? a : b);
     // Categorize packages based on compatibility.
     for (final entry in compatibility.entries) {
-      if (entry.value.isNotEmpty) {
-        if (checker.isCompatible(entry.value)) {
+      var supportedPlatforms = entry.value['platforms'];
+
+      if (supportedPlatforms.isNotEmpty) {
+        if (checker.isCompatible(supportedPlatforms)) {
           supportedList.add(entry.key);
         } else {
           notSupportedList.add(entry.key);
         }
+      } else {
+        unknownList.add(entry);
       }
     }
 
@@ -62,7 +70,8 @@ class PackageChecker {
     if (supportedList.isNotEmpty) {
       print('$blue(${supportedList.length})$green Supported:$reset');
       for (var package in supportedList) {
-        print('  ✅  $package');
+        print(
+            '  ✅  ${package.padRight(maxWidth)} ${showLink ? 'https://pub.dev/packages/$package' : ''}');
       }
     }
 
@@ -70,7 +79,17 @@ class PackageChecker {
     if (notSupportedList.isNotEmpty) {
       print('$blue(${notSupportedList.length})$red Not Supported:$reset');
       for (var package in notSupportedList) {
-        print('  ❌  $package');
+        print(
+            '  ❌  ${package.padRight(maxWidth)} ${showLink ? 'https://pub.dev/packages/$package' : ''}');
+      }
+    }
+
+    // Display unknown packages.
+    if (unknownList.isNotEmpty) {
+      print('$blue(${unknownList.length})$yellow Unknown:$reset');
+      for (var package in unknownList) {
+        print(
+            '  ❓  ${package.key.padRight(maxWidth)} ${showLink ? 'https://pub.dev/packages/${package.key}' : ''}');
       }
     }
 
@@ -82,8 +101,10 @@ class PackageChecker {
   ///
   /// - [platformNames]: A list of platform names to validate (e.g., ["android", "ios"]).
 
-  Future<void> checkAll(List<String> platformNames) async {
-    var logPrinter = LogPrintHelper();
+  Future<void> checkAll(List<String> platformNames,
+      {bool showLink = false}) async {
+    var logPrinter = LogPrintHelper(maxLength: 100);
+    logPrinter.printStart(platformNames.join(', '));
 
     // Initialize the pubspec reader and platform checker.
     final reader = PubspecReader();
@@ -96,17 +117,61 @@ class PackageChecker {
       return;
     }
 
-    List<String> supportedList = [];
-    List<String> notSupportedList = [];
+    List<MapEntry<String, Map<String, dynamic>>> supportedList = [];
+    List<MapEntry<String, Map<String, dynamic>>> notSupportedList = [];
+    List<MapEntry<String, Map<String, dynamic>>> unknownList = [];
+
+    // Determine the maximum width for the first column
+    int maxWidth = compatibility.entries
+        .map((pkg) => pkg.key.length)
+        .reduce((a, b) => a > b ? a : b);
+
+    int maxPlatformsWidth = compatibility.entries
+        .map((pkg) => pkg.value['platforms'].toString().length)
+        .reduce((a, b) => a > b ? a : b);
+
     for (final entry in compatibility.entries) {
-      if (entry.value.isNotEmpty) {
-        if (checker.isCompatible(entry.value)) {
-          supportedList.add(entry.key);
-          print('  $yellow${entry.key} $green ${entry.value}$reset');
+      var link = showLink ? 'https://pub.dev/packages/${entry.key}' : '';
+      var supportedPlatforms = entry.value['platforms'];
+      if (supportedPlatforms.isNotEmpty) {
+        String supportedPlatformNames = supportedPlatforms.toString();
+        if (checker.isCompatible(supportedPlatforms)) {
+          supportedList.add(entry);
         } else {
-          notSupportedList.add(entry.key);
-          print('  $yellow${entry.key} $red ${entry.value}$reset');
+          notSupportedList.add(entry);
         }
+      } else {
+        unknownList.add(entry);
+      }
+    }
+
+    // Display supported packages.
+    if (supportedList.isNotEmpty) {
+      for (var package in supportedList) {
+        var link = showLink ? 'https://pub.dev/packages/${package.key}' : '';
+        var supportedPlatformNames = package.value['platforms'].toString();
+        print(
+            '$green ✅ ${package.key.padRight(maxWidth)}\t${supportedPlatformNames.padRight(maxPlatformsWidth)}\t$link$reset');
+      }
+    }
+
+    // Display unsupported packages.
+    if (notSupportedList.isNotEmpty) {
+      for (var package in notSupportedList) {
+        var link = showLink ? 'https://pub.dev/packages/${package.key}' : '';
+        var supportedPlatformNames = package.value['platforms'].toString();
+        print(
+            '$red ❌ ${package.key.padRight(maxWidth)}\t${supportedPlatformNames.padRight(maxPlatformsWidth)}\t$link$reset');
+      }
+    }
+
+    // Display unknown packages.
+    if (unknownList.isNotEmpty) {
+      for (var package in unknownList) {
+        var link = showLink ? 'https://pub.dev/packages/${package.key}' : '';
+        var supportedPlatformNames = package.value['platforms'].toString();
+        print(
+            '$yellow ❓ ${package.key.padRight(maxWidth)}\t${'[unknown]'.padRight(maxPlatformsWidth)}\t$link$reset');
       }
     }
 
@@ -115,6 +180,9 @@ class PackageChecker {
     print(
         '$blue${notSupportedList.length}$reset$red packages doesn\'t support$reset');
     print(
-        '$yellow${'-' * 15} Compatibility check completed for "$platformNames" ${'-' * 15} $reset');
+        '$blue${unknownList.length}$reset$yellow unknown packages, you need to check it manually in the link$reset');
+
+    // Log the end of the compatibility check.
+    logPrinter.printEnd(platformNames.join(', '));
   }
 }

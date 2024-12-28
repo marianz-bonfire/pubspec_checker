@@ -75,6 +75,10 @@ Check compatibility for `android` and `ios`:
 ```bash
 dart run pubspec_checker android ios
 ```
+Check compatibility for `android` and `windows` and shows package link:
+```bash
+dart run pubspec_checker android ios -l
+```
 Check compatibility for `web`:
 ```bash
 dart run pubspec_checker web

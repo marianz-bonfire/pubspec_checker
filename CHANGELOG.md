@@ -1,4 +1,11 @@
-## [1.0.2] - 2024-12-28
+## 1.0.3
+### Added
++ Added `macos` check support
+### Fixed
+* Fixed showing links of its package
+* Fixed individual platform argument options
+
+## 1.0.2
 ### Added
 + Added package app image
 * Enhanced README file to make it more details
@@ -6,7 +13,7 @@
 ### Fixed
 * Resolved dependencies version
 
-## [1.0.1] - 2024-12-21
+## 1.0.1
 ### Added
 + Added documentation to all classes, methods, and constants across all files for better maintainability and readability.
 * Enhanced logging output with detailed formatting and dynamic hyphen padding.
@@ -16,7 +23,7 @@
 * Resolved minor issues with inconsistent log formatting.
 Improved compatibility check logic to handle edge cases where no dependencies are found.
 
-## [1.0.0] - 2024-12-20
+## 1.0.0
 ### Added
 + Initial release of the pubspec_checker package.
 + Supports platform compatibility checks for android, ios, web, windows, linux, and macos.

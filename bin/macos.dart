@@ -19,8 +19,9 @@ Future<void> main(List<String> arguments) async {
 
   if (showList) {
     await PackageChecker()
-        .checkAll([PackagePlatform.ios.name], showLink: showLinks);
+        .checkAll([PackagePlatform.macos.name], showLink: showLinks);
   } else {
-    await PackageChecker().check(PackagePlatform.ios.name, showLink: showLinks);
+    await PackageChecker()
+        .check(PackagePlatform.macos.name, showLink: showLinks);
   }
 }

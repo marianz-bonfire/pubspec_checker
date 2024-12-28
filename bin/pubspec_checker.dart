@@ -28,13 +28,19 @@ Future<void> main(List<String> arguments) async {
   List<String> platformNames =
       platforms.map((platform) => platform['name'] as String).toList();
   if (platformsToCheck.isNotEmpty) {
-    platformNames =
-        platformsToCheck.map((platform) => platform as String).toList();
-  } else {}
+    // Filtered only available platforms
+    List<Map<String, dynamic>> filteredPlatforms = platforms
+        .where((platform) => platformsToCheck.contains(platform['name']))
+        .toList();
+
+    platformNames = filteredPlatforms
+        .map((platform) => platform['name'] as String)
+        .toList();
+  }
   if (showList) {
-    await PackageChecker().checkAll(platformNames);
+    await PackageChecker().checkAll(platformNames, showLink: showLinks);
   } else {
-    for (var element in platformsToCheck) {
+    for (var element in platformNames) {
       await PackageChecker().check(element, showLink: showLinks);
     }
   }

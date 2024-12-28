@@ -1,3 +1,11 @@
+## [1.0.2] - 2024-12-28
+### Added
++ Added package app image
+* Enhanced README file to make it more details
+* Formatted dart files as requirements of pub dev
+### Fixed
+* Resolved dependencies version
+
 ## [1.0.1] - 2024-12-21
 ### Added
 + Added documentation to all classes, methods, and constants across all files for better maintainability and readability.

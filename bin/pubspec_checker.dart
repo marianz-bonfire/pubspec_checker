@@ -3,8 +3,12 @@ import 'package:pubspec_checker/pubspec_checker.dart';
 
 Future<void> main(List<String> arguments) async {
   final parser = ArgParser()
-    ..addFlag('show', abbr: 's', negatable: false, help: 'Show list of packages with supported platforms')
-    ..addFlag('links', abbr: 'l', negatable: false, help: 'Show links of packages');
+    ..addFlag('show',
+        abbr: 's',
+        negatable: false,
+        help: 'Show list of packages with supported platforms')
+    ..addFlag('links',
+        abbr: 'l', negatable: false, help: 'Show links of packages');
 
   // Parse the arguments
   final results = parser.parse(arguments);
@@ -21,15 +25,17 @@ Future<void> main(List<String> arguments) async {
   print('Show links of packages: $showLinks');
    */
 
-  List<String> platformNames = platforms.map((platform) => platform['name'] as String).toList();
+  List<String> platformNames =
+      platforms.map((platform) => platform['name'] as String).toList();
   if (platformsToCheck.isNotEmpty) {
-    platformNames = platformsToCheck.map((platform) => platform as String).toList();
+    platformNames =
+        platformsToCheck.map((platform) => platform as String).toList();
   } else {}
   if (showList) {
     await PackageChecker().checkAll(platformNames);
   } else {
     for (var element in platformsToCheck) {
-      await PackageChecker().check(element);
+      await PackageChecker().check(element, showLink: showLinks);
     }
   }
 }

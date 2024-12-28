@@ -15,7 +15,8 @@ class PlatformChecker {
   /// Takes a `Map<String, dynamic>` of dependencies and returns a map where:
   /// - Keys are package names.
   /// - Values are a list of supported platforms.
-  Future<Map<String, List<String>>> checkPackageCompatibility(Map<String, dynamic> dependencies) async {
+  Future<Map<String, List<String>>> checkPackageCompatibility(
+      Map<String, dynamic> dependencies) async {
     final Map<String, List<String>> compatibility = {};
 
     for (final package in dependencies.keys) {
@@ -24,7 +25,8 @@ class PlatformChecker {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final supportedPlatforms = (data['latest']['pubspec']['flutter']?['plugin']?['platforms'] as Map?)
+        final supportedPlatforms = (data['latest']['pubspec']['flutter']
+                    ?['plugin']?['platforms'] as Map?)
                 ?.keys
                 .map((value) => '$value')
                 .toList() ??

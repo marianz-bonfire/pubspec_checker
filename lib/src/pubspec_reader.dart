@@ -17,7 +17,8 @@ class PubspecReader {
   /// Throws a `FileSystemException` if the file does not exist.
   Map<String, dynamic> getDependencies() {
     if (!pubspecFile.existsSync()) {
-      throw FileSystemException('pubspec.yaml not found in the project directory.');
+      throw FileSystemException(
+          'pubspec.yaml not found in the project directory.');
     }
 
     final content = pubspecFile.readAsStringSync();

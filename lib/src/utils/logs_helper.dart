@@ -28,10 +28,12 @@ class LogPrintHelper {
   /// Ensures the text is centered within the specified `maxLength`.
   void printLog(String text) {
     int textLength = text.length;
-    int totalDashLength = maxLength - textLength - 2; // Account for spaces around text
+    int totalDashLength =
+        maxLength - textLength - 2; // Account for spaces around text
     int leftDashLength = totalDashLength ~/ 2;
     int rightDashLength = totalDashLength - leftDashLength;
 
-    print('$yellow${'-' * leftDashLength} $text ${'-' * rightDashLength}$reset');
+    print(
+        '$yellow${'-' * leftDashLength} $text ${'-' * rightDashLength}$reset');
   }
 }

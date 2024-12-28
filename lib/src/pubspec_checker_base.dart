@@ -10,8 +10,10 @@ class PackageChecker {
   ///
   /// Iterates through the specified platform, fetches its name, and validates the packages.
   Future<void> checkPlatform(PackagePlatform platform) async {
-    var checkedPlatforms = platforms.where((element) => element['id'] == platform);
-    var platformNames = checkedPlatforms.map((platform) => platform['name'] as String).toList();
+    var checkedPlatforms =
+        platforms.where((element) => element['id'] == platform);
+    var platformNames =
+        checkedPlatforms.map((platform) => platform['name'] as String).toList();
     for (var element in platformNames) {
       check(element);
     }
@@ -110,7 +112,9 @@ class PackageChecker {
 
     print('');
     print('$blue${supportedList.length}$reset$green packages supports$reset');
-    print('$blue${notSupportedList.length}$reset$red packages doesn\'t support$reset');
-    print('$yellow${'-' * 15} Compatibility check completed for "$platformNames" ${'-' * 15} $reset');
+    print(
+        '$blue${notSupportedList.length}$reset$red packages doesn\'t support$reset');
+    print(
+        '$yellow${'-' * 15} Compatibility check completed for "$platformNames" ${'-' * 15} $reset');
   }
 }

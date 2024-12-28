@@ -3,6 +3,10 @@
 [![pub package](https://img.shields.io/pub/v/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker)
 [![package publisher](https://img.shields.io/pub/publisher/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker/publisher)
 
+<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
+
+
+
 A simple Flutter package that checks the compatibility of all dependencies in the `pubspec.yaml` file for specified platforms. This package reads the `pubspec.yaml` file, fetches the package information from `pub.dev`, and verifies the platforms (like `Android`, `iOS`, `web`, `macOS`, `Windows`, and `Linux`) against the provided list.
 <!-- 
 This README describes the package. If you publish this package to pub.dev,
@@ -16,12 +20,11 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
-![Main Image][main-image]
 
-[main-image]: https://github.com/marianz-bonfire/pubspec_checker/blob/master/assets/demo.jpg
+<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo.jpg">
 
 
-## Features
+## ✨ Features
 
 - Platform Compatibility Check:
     - Specify platforms (e.g., `android`, `ios`, `web`, etc.) to check which packages are supported.
@@ -32,7 +35,7 @@ Optionally show package links for more details.
      - Command-line arguments for quick execution and flexibility.
 
 
-## Getting started
+## 🚀 Getting started
 
 Add `pubspec_checker` to your Flutter or Dart project:
 
@@ -45,7 +48,7 @@ Run this command:
 flutter pub get
 ```
 
-## Usage
+## 📒 Usage
 
 Command-Line Interface (CLI)
 To use the package, run the following command:
@@ -66,7 +69,7 @@ _Options_
 - `-s` or `--show`: Display the list of packages with their supported platforms.
 - `-l` or `--links`: Display the links to the package details.
 
-## Examples
+## 📚 Examples
 Check compatibility for `android` and `ios`:
 
 ```bash
@@ -101,7 +104,7 @@ Built pubspec_checker:pubspec_checker.
 ```
 
 
-## Additional information
+## 💡 Additional information
 
 If you want to use the package programmatically, here’s how you can do it:
 
@@ -121,8 +124,9 @@ void main() async {
 }
 ```
 
-## Contributing
+## 🐞 Contributing
 Contributions are welcome! If you encounter any issues or have feature requests, please open an issue or submit a pull request on [GitHub](https://github.com/marianz-bonfire/pubspec_checker).
 
-## License
+## 🎖️ License
 This package is licensed under the [MIT License](https://mit-license.org/).
+

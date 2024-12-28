@@ -3,7 +3,7 @@
 [![pub package](https://img.shields.io/pub/v/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker)
 [![package publisher](https://img.shields.io/pub/publisher/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker/publisher)
 
-<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
+<img height="200" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
 
 
 
@@ -21,7 +21,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo.jpg">
+<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo.png">
 
 
 ## ✨ Features

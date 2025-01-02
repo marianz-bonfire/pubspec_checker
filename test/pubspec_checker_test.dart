@@ -3,30 +3,15 @@ import 'package:test/test.dart';
 
 void main() {
   group('Checking', () {
-    //final awesome = Awesome();
+    List<String> platformNames = [];
 
     setUp(() {
-      // Additional setup goes here.
+      platformNames =
+          platforms.map((platform) => platform['name'] as String).toList();
     });
 
-    test('"android" package compatibility', () async {
-      await PackageChecker().checkPlatform(PackagePlatform.android);
-    });
-
-    test('"ios" package compatibility', () async {
-      await PackageChecker().checkPlatform(PackagePlatform.ios);
-    });
-
-    test('"windows" package compatibility', () async {
-      await PackageChecker().checkPlatform(PackagePlatform.windows);
-    });
-
-    test('"linux" package compatibility', () async {
-      await PackageChecker().checkPlatform(PackagePlatform.linux);
-    });
-
-    test('"web" package compatibility', () async {
-      await PackageChecker().checkPlatform(PackagePlatform.web);
+    test('"All Platforms" package compatibility', () async {
+      await PackageChecker().checkAll(platformNames, showLink: true);
     });
 
     test('compatibility packages', () async {

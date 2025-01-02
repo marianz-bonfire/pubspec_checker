@@ -22,17 +22,13 @@ class PlatformChecker {
       Map<String, dynamic> dependencies) async {
     final Map<String, Map<String, dynamic>> compatibility = {};
 
-    int index = 0;
     for (final package in dependencies.keys) {
       final url = Uri.parse('https://pub.dev/api/packages/$package');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        if (index == 0) {
-          //print(response.body);
-        }
         final data = jsonDecode(response.body);
-        final supportedPlatforms = (data['latest']['pubspec']['flutter']
+        List<String> supportedPlatforms = (data['latest']['pubspec']['flutter']
                     ?['plugin']?['platforms'] as Map?)
                 ?.keys
                 .map((value) => '$value')
@@ -43,6 +39,11 @@ class PlatformChecker {
         final version = data['latest']['version'] as String;
         final link = data['latest']['archive_url'] as String;
 
+        if (supportedPlatforms.isEmpty) {
+          // If platforms is not specified in the pubspec then we will find another way
+          // to get the supported platforms by search platform and package name
+          supportedPlatforms = await searchSupportedPlatforms(package);
+        }
         // Store the supported platforms for the package.
         compatibility[package] = {
           'platforms': supportedPlatforms,
@@ -57,10 +58,32 @@ class PlatformChecker {
           'link': 'unknown',
         };
       }
-      index++;
     }
 
     return compatibility;
+  }
+
+  Future<List<String>> searchSupportedPlatforms(String packageName) async {
+    List<String> supportedPlatforms = [];
+    for (var platformName in platforms) {
+      final url = Uri.parse(
+          'https://pub.dev/api/search?q=platform:$platformName+$packageName');
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final packages = data['packages'] as List<dynamic>;
+        if (packages.isNotEmpty) {
+          final packageExists =
+              packages.any((package) => package['package'] == packageName);
+          if (packageExists) {
+            // The package exists in the list
+            supportedPlatforms.add(platformName);
+          }
+        }
+      }
+    }
+
+    return supportedPlatforms;
   }
 
   /// Checks if a package's platforms are compatible with the provided platform list.

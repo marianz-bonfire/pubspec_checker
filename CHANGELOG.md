@@ -1,3 +1,8 @@
+## 1.0.5
+* Added resolution on getting supported platforms from API
+* Added screenshots lint reported warning
+* Added example, using the package functionality in the code
+
 ## 1.0.4
 ### Fixed
 * Fixed lint reported warning

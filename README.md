@@ -3,11 +3,40 @@
 [![pub package](https://img.shields.io/pub/v/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker)
 [![package publisher](https://img.shields.io/pub/publisher/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker/publisher)
 
-<img height="260" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
+<p align="center">
+  <a href="https://pub.dev/packages/pubspec_checker">
+    <img height="260" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
+  </a>
+  <h1 align="center">Pubspec Checker</h1>
+</p>
 
+<p align="center">
+  <a href="https://pub.dev/packages/pubspec_checker">
+    <img src="https://img.shields.io/pub/v/pubspec_checker?label=pub.dev&labelColor=333940&logo=dart">
+  </a>
+  <a href="https://pub.dev/packages/pubspec_checker/score">
+    <img src="https://img.shields.io/pub/points/pubspec_checker?color=2E8B57&label=pub%20points">
+  </a>
+  <a href="https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/marianz-bonfire/pubspec_checker/dart.yml?branch=main&label=tests&labelColor=333940&logo=github">
+  </a>
+  <a href="https://app.codecov.io/gh/marianz-bonfire/pubspec_checker">
+    <img src="https://img.shields.io/codecov/c/github/marianz-bonfire/pubspec_checker?logo=codecov&logoColor=fff&labelColor=333940&flag=pubspec_checker">
+  </a>
+  <a href="https://tarsier-marianz.blogspot.com">
+    <img src="https://img.shields.io/static/v1?label=website&message=tarsier-marianz&labelColor=135d34&logo=blogger&logoColor=white&color=fd3a13">
+  </a>
+</p>
 
+<p align="center">
+  <a href="https://pub.dev/documentation/pubspec_checker/latest/">Documentation</a> •
+  <a href="https://github.com/marianz-bonfire/pubspec_checker/issues">Issues</a> •
+  <a href="https://github.com/marianz-bonfire/pubspec_checker/tree/master/example">Example</a> •
+  <a href="https://github.com/marianz-bonfire/pubspec_checker/blob/master/LICENSE">License</a> •
+  <a href="https://pub.dev/packages/pubspec_checker">Pub.dev</a>
+</p>
 
-A simple Flutter package that checks the compatibility of all dependencies in the `pubspec.yaml` file for specified platforms. This package reads the `pubspec.yaml` file, fetches the package information from `pub.dev`, and verifies the platforms (like `Android`, `iOS`, `web`, `macOS`, `Windows`, and `Linux`) against the provided list.
+A simple Dart/Flutter package that checks the compatibility of all dependencies in the `pubspec.yaml` file for specified platforms. This package reads the `pubspec.yaml` file, fetches the package information from `pub.dev`, and verifies the platforms (like `Android`, `iOS`, `web`, `macOS`, `Windows`, and `Linux`) against the provided list.
 <!-- 
 This README describes the package. If you publish this package to pub.dev,
 this README's contents appear on the landing page for your package.
@@ -21,7 +50,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo.png">
+<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-cli.png">
 
 
 ## ✨ Features
@@ -75,7 +104,7 @@ Check compatibility for `android` and `ios`:
 ```bash
 dart run pubspec_checker android ios
 ```
-Check compatibility for `android` and `windows` and shows package link:
+Check compatibility for `android` and `ios` and shows package link:
 ```bash
 dart run pubspec_checker android ios -l
 ```
@@ -123,10 +152,16 @@ void main() async {
   final results = await checker.checkPackageCompatibility(dependencies);
 
   for (var package in results.entries) {
-    print('Package: ${package.key}, Supported Platforms: ${package.value.join(", ")}');
+    print('Package: ${package.key}, Supported Platforms: ${package.value['platforms'].join(", ")}');
   }
 }
 ```
+_NOTE: Using package in the code, make sure you add it under **pubspec** `dependencies` not in the `dev_dependencies`._
+
+Sample Output:
+<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-example.png">
+
+
 
 ## 🐞 Contributing
 Contributions are welcome! If you encounter any issues or have feature requests, please open an issue or submit a pull request on [GitHub](https://github.com/marianz-bonfire/pubspec_checker).

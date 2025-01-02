@@ -1,8 +1,3 @@
-# pubspec_checker
-[![Dart CI](https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml/badge.svg)](https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml)
-[![pub package](https://img.shields.io/pub/v/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker)
-[![package publisher](https://img.shields.io/pub/publisher/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker/publisher)
-
 <p align="center">
   <a href="https://pub.dev/packages/pubspec_checker">
     <img height="260" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">

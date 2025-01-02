@@ -1,6 +1,6 @@
 name: pubspec_checker
 description: A simple Dart package that checks the compatibility of all dependencies in the pubspec.yaml file for specified platforms
-version: 1.0.5
+version: 1.0.6
 repository: https://github.com/marianz-bonfire/pubspec_checker
 homepage: https://github.com/marianz-bonfire/pubspec_checker
 issue_tracker: https://github.com/marianz-bonfire/pubspec_checker/issues

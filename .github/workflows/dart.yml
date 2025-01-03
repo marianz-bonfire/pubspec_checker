@@ -37,8 +37,8 @@ jobs:
         run: dart --version
 
       - name: Format code
-        if: ${{ matrix.sdk == 'stable' }}
-        run: dart run format-no-private
+        #if: ${{ matrix.sdk == 'stable' }}
+        run: dart format .
 
       - name: Active coverage
         run: dart pub global activate coverage
@@ -46,5 +46,8 @@ jobs:
       - name: Run tests
         run: dart run test
 
-      - uses: codecov/codecov-action@v3.1.6
-        if: ${{ matrix.sdk == 'stable' }}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: marianz-bonfire/pubspec_checker

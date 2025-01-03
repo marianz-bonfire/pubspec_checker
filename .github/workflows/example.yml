@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Dart
+name: Build Example 
 
 on:
   push:
@@ -22,9 +22,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Print Dart SDK version
-        run: dart --version
 
       - name: Print Flutter SDK version
         run: flutter --version

@@ -1,3 +1,8 @@
+# pubspec_checker
+[![Dart CI](https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml/badge.svg)](https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml)
+[![pub package](https://img.shields.io/pub/v/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker)
+[![package publisher](https://img.shields.io/pub/publisher/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker/publisher)
+
 <p align="center">
   <a href="https://pub.dev/packages/pubspec_checker">
     <img height="260" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
@@ -13,7 +18,7 @@
     <img src="https://img.shields.io/pub/points/pubspec_checker?color=2E8B57&label=pub%20points">
   </a>
   <a href="https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/marianz-bonfire/pubspec_checker/dart.yml?branch=main&label=tests&labelColor=333940&logo=github">
+    <img src="https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml/badge.svg">
   </a>
   <a href="https://app.codecov.io/gh/marianz-bonfire/pubspec_checker">
     <img src="https://img.shields.io/codecov/c/github/marianz-bonfire/pubspec_checker?logo=codecov&logoColor=fff&labelColor=333940&flag=pubspec_checker">

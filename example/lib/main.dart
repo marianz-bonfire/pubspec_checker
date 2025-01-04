@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pubspec_check_example/widgets/custom_checkbox.dart';
 import 'package:pubspec_checker/pubspec_checker.dart';
 
 void main() {

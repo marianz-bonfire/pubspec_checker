@@ -1,6 +1,3 @@
-## 1.0.6
-* Removed unused import
-
 ## 1.0.5
 * Added resolution on getting supported platforms from API
 * Added screenshots lint reported warning

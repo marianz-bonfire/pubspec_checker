@@ -1,3 +1,8 @@
+## 1.0.8
+
+* Upgraded SDK due to some issues encountered from previous published
+* Modified some lines to fixed warnings on dart analyze
+
 ## 1.0.7
 * Fixed the constraint `^0.13.5` on http does not support the stable version `1.0.0`.
 * Adjusted the max environment SDK constraint

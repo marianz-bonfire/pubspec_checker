@@ -55,8 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
     results = await checker!.checkPackageCompatibility(dependencies);
 
     for (var package in results.entries) {
-      print(
-          'Package: ${package.key}, Supported Platforms: ${package.value['platforms'].join(", ")}');
+      //print('Package: ${package.key}, Supported Platforms: ${package.value['platforms'].join(", ")}');
     }
 
     setState(() {

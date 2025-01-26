@@ -65,7 +65,7 @@ Add `pubspec_checker` to your Flutter or Dart project:
 
 ```yaml
 dev_dependencies:
-  pubspec_checker: ^1.0.7
+  pubspec_checker: ^1.0.8
 ```
 Run this command:
 ```bash
@@ -154,6 +154,7 @@ void main() async {
 _NOTE: Using package in the code, make sure you add it under **pubspec** `dependencies` not in the `dev_dependencies`._
 
 Sample Output:
+
 <img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-example.png">
 
 

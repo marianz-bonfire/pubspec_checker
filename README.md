@@ -1,8 +1,3 @@
-# pubspec_checker
-[![Dart CI](https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml/badge.svg)](https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml)
-[![pub package](https://img.shields.io/pub/v/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker)
-[![package publisher](https://img.shields.io/pub/publisher/pubspec_checker.svg)](https://pub.dev/packages/pubspec_checker/publisher)
-
 <p align="center">
   <a href="https://pub.dev/packages/pubspec_checker">
     <img height="260" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
@@ -20,8 +15,8 @@
   <a href="https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml">
     <img src="https://github.com/marianz-bonfire/pubspec_checker/actions/workflows/dart.yml/badge.svg">
   </a>
-  <a href="https://app.codecov.io/gh/marianz-bonfire/pubspec_checker">
-    <img src="https://img.shields.io/codecov/c/github/marianz-bonfire/pubspec_checker?logo=codecov&logoColor=fff&labelColor=333940&flag=pubspec_checker">
+  <a href="https://pub.dev/packages/pubspec_checker/publisher">
+    <img src="https://img.shields.io/pub/publisher/pubspec_checker.svg">
   </a>
   <a href="https://tarsier-marianz.blogspot.com">
     <img src="https://img.shields.io/static/v1?label=website&message=tarsier-marianz&labelColor=135d34&logo=blogger&logoColor=white&color=fd3a13">
@@ -70,7 +65,7 @@ Add `pubspec_checker` to your Flutter or Dart project:
 
 ```yaml
 dev_dependencies:
-  pubspec_checker: ^1.0.4
+  pubspec_checker: ^1.0.7
 ```
 Run this command:
 ```bash

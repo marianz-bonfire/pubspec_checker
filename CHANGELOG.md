@@ -1,3 +1,12 @@
+## 1.0.7
+* Fixed the constraint `^0.13.5` on http does not support the stable version `1.0.0`.
+* Adjusted the max environment SDK constraint
+* Upgraded some dependencies
+* Modified README file
+
+## 1.0.6
+* Removed unused import
+
 ## 1.0.5
 * Added resolution on getting supported platforms from API
 * Added screenshots lint reported warning

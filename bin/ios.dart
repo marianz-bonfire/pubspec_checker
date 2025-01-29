@@ -4,9 +4,7 @@ import 'package:pubspec_checker/pubspec_checker.dart';
 Future<void> main(List<String> arguments) async {
   final parser = ArgParser()
     ..addFlag('show',
-        abbr: 's',
-        negatable: false,
-        help: 'Show list of packages with supported platforms')
+        abbr: 's', negatable: false, help: 'Show platform status as icon')
     ..addFlag('links',
         abbr: 'l', negatable: false, help: 'Show links of packages');
 
@@ -14,13 +12,9 @@ Future<void> main(List<String> arguments) async {
   final results = parser.parse(arguments);
 
   // Extract platforms to be checked (positional arguments)
-  final showList = results['show'] as bool; // Check if -s is provided
+  final showIcon = results['show'] as bool; // Check if -s is provided
   final showLinks = results['links'] as bool; // Check if -l is provided
 
-  if (showList) {
-    await PackageChecker()
-        .checkAll([PackagePlatform.ios.name], showLink: showLinks);
-  } else {
-    await PackageChecker().check(PackagePlatform.ios.name, showLink: showLinks);
-  }
+  await PackageChecker().checkAll([PackagePlatform.ios.name],
+      showLink: showLinks, showIcon: showIcon);
 }

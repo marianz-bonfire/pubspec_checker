@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
 
 /// A utility class to check platform compatibility for packages.
 class PlatformChecker {
@@ -22,42 +23,53 @@ class PlatformChecker {
       Map<String, dynamic> dependencies) async {
     final Map<String, Map<String, dynamic>> compatibility = {};
 
-    for (final package in dependencies.keys) {
-      final url = Uri.parse('https://pub.dev/api/packages/$package');
-      final response = await http.get(url);
+    try {
+      for (final package in dependencies.keys) {
+        final url = Uri.parse('https://pub.dev/api/packages/$package');
+        final response = await http.get(url);
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        List<String> supportedPlatforms = (data['latest']['pubspec']['flutter']
-                    ?['plugin']?['platforms'] as Map?)
-                ?.keys
-                .map((value) => '$value')
-                .toList() ??
-            [];
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          List<String> supportedPlatforms = (data['latest']['pubspec']
+                      ['flutter']?['plugin']?['platforms'] as Map?)
+                  ?.keys
+                  .map((value) => '$value')
+                  .toList() ??
+              [];
 
-        // Extract version and link
-        final version = data['latest']['version'] as String;
-        final link = data['latest']['archive_url'] as String;
+          // Extract version and link
+          final version = data['latest']['version'] as String;
+          final link = data['latest']['archive_url'] as String;
 
-        if (supportedPlatforms.isEmpty) {
-          // If platforms is not specified in the pubspec then we will find another way
-          // to get the supported platforms by search platform and package name
-          supportedPlatforms = await searchSupportedPlatforms(package);
+          if (supportedPlatforms.isEmpty) {
+            // If platforms is not specified in the pubspec then we will find another way
+            // to get the supported platforms by search platform and package name
+            supportedPlatforms = await searchSupportedPlatforms(package);
+          }
+
+          if (supportedPlatforms.isEmpty) {
+            // If platforms is not specified in the pub dev search then we need
+            // to crawl the package website page to get the supported platforms
+            supportedPlatforms = await scrapSupportedPlatforms(package);
+          }
+
+          // Store the supported platforms for the package.
+          compatibility[package] = {
+            'platforms': supportedPlatforms,
+            'version': version,
+            'link': link,
+          };
+        } else {
+          // If the package is not found, mark its platform and version as 'unknown'.
+          compatibility[package] = {
+            'platforms': ['unknown'],
+            'version': 'unknown',
+            'link': 'unknown',
+          };
         }
-        // Store the supported platforms for the package.
-        compatibility[package] = {
-          'platforms': supportedPlatforms,
-          'version': version,
-          'link': link,
-        };
-      } else {
-        // If the package is not found, mark its platform and version as 'unknown'.
-        compatibility[package] = {
-          'platforms': ['unknown'],
-          'version': 'unknown',
-          'link': 'unknown',
-        };
       }
+    } catch (e) {
+      rethrow;
     }
 
     return compatibility;
@@ -66,23 +78,58 @@ class PlatformChecker {
   Future<List<String>> searchSupportedPlatforms(String packageName) async {
     List<String> supportedPlatforms = [];
     for (var platformName in platforms) {
-      final url = Uri.parse(
-          'https://pub.dev/api/search?q=platform:$platformName+$packageName');
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final packages = data['packages'] as List<dynamic>;
-        if (packages.isNotEmpty) {
-          final packageExists =
-              packages.any((package) => package['package'] == packageName);
-          if (packageExists) {
-            // The package exists in the list
-            supportedPlatforms.add(platformName);
+      try {
+        final url = Uri.parse(
+            'https://pub.dev/api/search?q=platform:$platformName+$packageName');
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final packages = data['packages'] as List<dynamic>;
+          if (packages.isNotEmpty) {
+            final packageExists =
+                packages.any((package) => package['package'] == packageName);
+            if (packageExists) {
+              // The package exists in the list
+              supportedPlatforms.add(platformName);
+            }
           }
         }
-      }
+      } catch (_) {}
     }
 
+    return supportedPlatforms;
+  }
+
+  Future<List<String>> scrapSupportedPlatforms(String packageName) async {
+    List<String> supportedPlatforms = [];
+    final url = 'https://pub.dev/packages/$packageName';
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        // Parse the HTML content
+        final document = parser.parse(response.body);
+
+        // Locate the "Flutter platform support" section
+        // Find the 'detail-tags' div
+        final detailTagsDiv = document.querySelector('.detail-tags');
+
+        if (detailTagsDiv != null) {
+          // Locate 'a' tags inside the div with the Platform span
+          final platformLinks = detailTagsDiv
+              .querySelectorAll('div.-pub-tag-badge > span.tag-badge-main')
+              .where((element) => element.text.trim() == 'Platform')
+              .map((element) => element.parent) // Parent of the span
+              .expand((parentDiv) =>
+                  parentDiv?.querySelectorAll('a.tag-badge-sub') ?? [])
+              .map((link) => link.text.trim().toLowerCase())
+              .toList()
+              .cast<String>(); // Ensure the list is a List<String>
+
+          supportedPlatforms = platformLinks;
+        }
+      }
+    } catch (_) {}
     return supportedPlatforms;
   }
 

@@ -1,3 +1,13 @@
+## 1.0.9
+
+* Changed result display to `tabular format` to make it cleaner and easy to scan
++ Added new function to crawl package page if no supported platforms fetch from API
+- Removed unnecessary files
+- Refactored some codes and remove some unwanted lines of code
++ Added some screenshots for samples
+* Modified README to include enhancement details of the package
+
+
 ## 1.0.8
 
 * Upgraded SDK due to some issues encountered from previous published

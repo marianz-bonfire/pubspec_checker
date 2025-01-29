@@ -56,7 +56,9 @@ and the Flutter guide for
     - List all packages with their supported platforms.
 Optionally show package links for more details.
 - Easy to Use:
-     - Command-line arguments for quick execution and flexibility.
+    - Command-line arguments for quick execution and flexibility.
+- 🆕**Tabular Format**:
+    -  Makes data clean, structured, and easy to read, especially when comparing multiple values. It also scales well when adding more details like links or summaries.
 
 
 ## 🚀 Getting started
@@ -65,7 +67,7 @@ Add `pubspec_checker` to your Flutter or Dart project:
 
 ```yaml
 dev_dependencies:
-  pubspec_checker: ^1.0.8
+  pubspec_checker: ^1.0.9
 ```
 Run this command:
 ```bash
@@ -90,7 +92,7 @@ _Parameters_
     - macos
 
 _Options_
-- `-s` or `--show`: Display the list of packages with their supported platforms.
+- `-s` or `--show`: Display the platform status indicator as icon (e.g. Supported : ✅, otherwise the default `Y`).
 - `-l` or `--links`: Display the links to the package details.
 
 ## 📚 Examples
@@ -106,31 +108,27 @@ dart run pubspec_checker android ios -l
 Check compatibility for `web`:
 ```bash
 dart run pubspec_checker web
+dart run pubspec_checker:web #alternative command with colon
 ```
-or
-```bash
-dart run pubspec_checker:web
-```
-
-Example Output:
+Check compatibility for `all` platforms with `-s`:
 
 ```bash
-PS D:\Repository\pubspec_checker\example> dart run pubspec_checker windows ios
-Building package executable...
-Built pubspec_checker:pubspec_checker.
-------- Started checking compatibility for "windows" -------
-(2) Supported:
-  ✅  file_picker
-  ✅  connectivity_plus
-(5) Not Supported:
-  ❌  pusher_client
-  ❌  disk_space
-  ❌  open_file_plus
-  ❌  sqflite_sqlcipher
-  ❌  flutter_pdfview
-------- Compatibility check completed for "windows" --------
+dart run pubspec_checker -s -l
+```
+Example output showing status platform as icon (`-s`):
+
+<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-cli-icon.png">
+
+Example output showing status platform by default (_without_ `-s`):
+```bash
+dart run pubspec_checker -l
 ```
 
+Example Output showing status platform in:
+
+<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-cli-default.png">
+
+NOTE: 📝 By default we use ASCII characters (e.g., `Y`, `X`, `?`) on platform status indicator to ensure proper alignment across different terminals such: (_Command Prompt, PowerShell, Linux Terminal, Git Bash_, etc). Emojis like ✅ and ❔ can sometimes have variable widths depending on the terminal or font.
 
 ## 💡 Additional information
 

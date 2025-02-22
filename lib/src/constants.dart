@@ -11,3 +11,4 @@ final redBg = '\x1B[48;5;9m';
 final blueBg = '\x1B[48;5;12m';
 final lightBlueBg = '\x1B[48;5;117m';
 final yellowBg = '\x1B[48;5;11m';
+final grayBg = "\x1B[100m";

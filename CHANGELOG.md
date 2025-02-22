@@ -1,3 +1,8 @@
+## 1.1.0
+
++ Added new function to get supported platforms alternatively via score API
++ Added pubspec topics and changed package version
+
 ## 1.0.9
 
 * Changed result display to `tabular format` to make it cleaner and easy to scan

@@ -43,6 +43,12 @@ class PlatformChecker {
 
           if (supportedPlatforms.isEmpty) {
             // If platforms is not specified in the pubspec then we will find another way
+            // to get the supported platforms by extracting tags on score API
+            supportedPlatforms = await getScoreSupportedPlatforms(package);
+          }
+
+          if (supportedPlatforms.isEmpty) {
+            // If platforms is not specified in the pubspec then we will find another way
             // to get the supported platforms by search platform and package name
             supportedPlatforms = await searchSupportedPlatforms(package);
           }
@@ -73,6 +79,33 @@ class PlatformChecker {
     }
 
     return compatibility;
+  }
+
+  Future<List<String>> getScoreSupportedPlatforms(String packageName) async {
+    List<String> supportedPlatforms = [];
+    try {
+      final url = Uri.parse('https://pub.dev/api/packages/$packageName/score');
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Extract the list of tags
+        final tags = List<String>.from(data['tags']);
+
+        // Filter platform tags and remove the "platform:" prefix
+        final platforms = tags
+            .where((tag) => tag.startsWith('platform:'))
+            .map((tag) => tag.replaceFirst('platform:', ''))
+            .toList();
+
+        if (platforms.isNotEmpty) {
+          for (final platform in platforms) {
+            supportedPlatforms.add(platform.trim());
+          }
+        }
+      }
+    } catch (_) {}
+
+    return supportedPlatforms;
   }
 
   Future<List<String>> searchSupportedPlatforms(String packageName) async {

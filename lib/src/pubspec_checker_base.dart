@@ -214,6 +214,6 @@ class PackageChecker {
 
     // Log the end of the compatibility check.
     print(
-        '${blue}Checking compatibility completed in ($reset${(stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1)}s$blue)');
+        '${blue}Checking compatibility completed in ($reset${(stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1)}s$blue)$reset');
   }
 }

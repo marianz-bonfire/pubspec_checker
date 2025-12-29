@@ -15,6 +15,6 @@ Future<void> main(List<String> arguments) async {
   final showIcon = results['show'] as bool; // Check if -s is provided
   final showLinks = results['links'] as bool; // Check if -l is provided
 
-  await PackageChecker().checkAll([PackagePlatform.linux.name],
+  await PackageChecker().checkAll([PackagePlatform.linux],
       showLink: showLinks, showIcon: showIcon);
 }

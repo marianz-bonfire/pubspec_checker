@@ -3,15 +3,21 @@ import 'package:test/test.dart';
 
 void main() {
   group('Checking', () {
-    List<String> platformNames = [];
+    List<PackagePlatform> platforms = [];
 
     setUp(() {
-      platformNames =
-          platforms.map((platform) => platform['name'] as String).toList();
+      platforms = [
+        PackagePlatform.android,
+        PackagePlatform.ios,
+        PackagePlatform.web,
+        PackagePlatform.linux,
+        PackagePlatform.windows,
+        PackagePlatform.macos
+      ];
     });
 
     test('"All Platforms" package compatibility', () async {
-      await PackageChecker().checkAll(platformNames, showLink: true);
+      await PackageChecker().checkAll(platforms, showLink: true);
     });
 
     test('compatibility packages', () async {
@@ -19,14 +25,15 @@ void main() {
       final reader = PubspecReader();
 
       // Instantiate a PlatformChecker for specific platforms.
-      final checker = PlatformChecker(['ios', 'android']);
+      final checker =
+          PlatformChecker([PackagePlatform.ios, PackagePlatform.android]);
 
       // Get dependencies from pubspec.yaml.
       final dependencies = reader.getDependencies();
 
       // Check compatibility for the dependencies.
       final compatibility =
-          await checker.checkPackageCompatibility(dependencies);
+          await checker.checkDependenciesCompatibility(dependencies);
 
       // Print the results for verification.
       for (final entry in compatibility.entries) {

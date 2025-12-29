@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pubspec_checker/pubspec_checker.dart';
+import 'package:tarsier_logger/tarsier_logger.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,9 +35,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool checking = false;
-  Map<String, Map<String, dynamic>> results = {};
+  Map<String, PackageCompatibility> results = {};
 
-  List<String> platformsToCheck = ["windows"];
+  List<PackagePlatform> platformsToCheck = [PackagePlatform.windows];
   PlatformChecker? checker;
   @override
   void initState() {
@@ -52,10 +55,15 @@ class _MyHomePageState extends State<MyHomePage> {
     final reader = PubspecReader();
 
     final dependencies = reader.getDependencies();
-    results = await checker!.checkPackageCompatibility(dependencies);
+    Console.error(jsonEncode(dependencies));
+    //results = await checker!.checkDependenciesCompatibility(dependencies);
+    results =
+        await checker!.checkPackagesCompatibility(['tarsier_loggers', 'http']);
 
     for (var package in results.entries) {
-      //print('Package: ${package.key}, Supported Platforms: ${package.value['platforms'].join(", ")}');
+      Console.success(
+          'Supported Platforms: ${package.value.platforms.join(", ")}',
+          'Package: ${package.key}');
     }
 
     setState(() {
@@ -94,7 +102,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Column(
                       children: [
                         CircularProgressIndicator(),
-                        Text('Checking packages supported platforms')
+                        Text('Checking packages supported platforms'),
+                        SizedBox(height: 12),
+                        Text(
+                          'Please wait...checking depends on your internet connection...',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ],
                     ),
                   )
@@ -103,8 +116,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemCount: results.entries.length,
                       itemBuilder: (BuildContext context, int index) {
                         var package = results.entries.elementAt(index);
-                        var supportedPlatforms =
-                            package.value['platforms'] as List<String>;
+                        final supportedPlatforms = package.value.platforms;
+                        final supportedPlatformNames = supportedPlatforms
+                            .map((p) => p.platformName)
+                            .toList();
 
                         bool isSupportedToWindows = false;
                         if (supportedPlatforms.isNotEmpty) {
@@ -121,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                package.value['version'],
+                                package.value.version,
                                 style: const TextStyle(color: Colors.grey),
                               ),
                               const SizedBox(width: 10),
@@ -139,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ],
                           ),
                           trailing: Text(
-                              '${supportedPlatforms.isNotEmpty ? supportedPlatforms : 'Unknown'}'),
+                              '${supportedPlatforms.isNotEmpty ? supportedPlatformNames : 'Unknown'}'),
                         );
                       },
                     ),

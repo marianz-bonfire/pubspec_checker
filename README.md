@@ -138,7 +138,7 @@ If you want to use the package programmatically, here’s how you can do it:
 import 'package:pubspec_checker/pubspec_checker.dart';
 
 void main() async {
-  final checker = PlatformChecker(['ios', 'android']);
+  final checker = PlatformChecker([PackagePlatform.ios, PackagePlatform.android]);
   final reader = PubspecReader();
 
   final dependencies = reader.getDependencies();

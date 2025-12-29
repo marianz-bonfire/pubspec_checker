@@ -16,18 +16,15 @@ Future<void> main(List<String> arguments) async {
   final showIcon = results['show'] as bool; // Check if -s is provided
   final showLinks = results['links'] as bool; // Check if -l is provided
 
-  List<String> platformNames =
-      platforms.map((platform) => platform['name'] as String).toList();
+  List<PackagePlatform> platforms =
+      PackagePlatform.values.map((platform) => platform).toList();
   if (platformsToCheck.isNotEmpty) {
     // Filtered only available platforms
-    List<Map<String, dynamic>> filteredPlatforms = platforms
-        .where((platform) => platformsToCheck.contains(platform['name']))
-        .toList();
 
-    platformNames = filteredPlatforms
-        .map((platform) => platform['name'] as String)
+    platforms = PackagePlatform.values
+        .where((platform) => platformsToCheck.contains(platform.platformName))
         .toList();
   }
   await PackageChecker()
-      .checkAll(platformNames, showLink: showLinks, showIcon: showIcon);
+      .checkAll(platforms, showLink: showLinks, showIcon: showIcon);
 }

@@ -1,0 +1,11 @@
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
+# dartdoc_options.yaml
+output: doc/api
+include: lib
+exclude:
+  - lib/src/console/
+  - lib/src/pubspec/pubspec_loader.dart
+  - lib/src/pubspec/pubspec_loader_io.dart
+  - lib/src/pubspec/pubspec_loader_stub.dart
+  - lib/src/pubspec/pubspec_loader_web.dart

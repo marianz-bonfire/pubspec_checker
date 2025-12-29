@@ -54,6 +54,14 @@ dependencies:
 
   pubspec_checker: #Add package when you use it in the project code
     path: ../
+  tarsier_storage: ^0.0.4
+  tarsier_datamocker: ^1.0.2
+  tarsier_logger: ^1.1.1
+  tarsier_local_storage: ^1.0.2
+  tarsier_mysql_storage: ^1.0.3
+  tarsier_env: ^1.0.7
+  tarsier_http_parser: ^1.1.0
+  tarsier_websocket_client: ^1.1.1
 
 dev_dependencies:
   flutter_test:

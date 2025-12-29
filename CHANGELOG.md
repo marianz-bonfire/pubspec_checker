@@ -1,3 +1,30 @@
+## 1.3.0
+
+⚠️ Breaking Changes
+
+- Public APIs that previously accepted platform names as `String` now require `PackagePlatform`.
+- Direct access to internal compatibility maps is no longer supported; typed access is required.
+
+✨ Added
+
+- Added `PackagePlatform` enum as the single source of truth for supported platforms.
+- Added `PlatformStatus` enum to represent compatibility states (`supported`, `notSupported`, `unknown`).
+- Added API documentation examples using dartdoc `Example` blocks.
+
+🔒 Improved
+
+- Replaced all String-based platform handling with compile-time safe enums.
+- Removed all Map<String, dynamic> platform metadata in favor of typed models.
+- Public API methods now delegate to private implementations, keeping API docs clean and readable.
+
+🧹 Changed
+
+- `checkAll` now accepts `List<PackagePlatform>` instead of `List<String>`.
+- Internal compatibility data now stores `List<PackagePlatform>` consistently.
+- Summary rendering logic now derives colors from `PlatformStatus` instead of string literals.
+- Platform name resolution is now handled via enum properties instead of manual maps.
+
+
 ## 1.2.0
 
 ### Changed

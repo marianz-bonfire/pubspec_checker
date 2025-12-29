@@ -1,219 +1,424 @@
-// Provides the primary logic for the pubspec_checker package.
-// This file contains public-facing classes and methods for checking platform compatibility.
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:pubspec_checker/pubspec_checker.dart';
-import 'package:pubspec_checker/src/constants.dart';
+import 'package:pubspec_checker/src/console/constants.dart';
 
+/// Enum representing supported platforms for package compatibility checking.
+///
+/// Each value corresponds to a platform that can be checked for compatibility
+/// with Dart/Flutter packages.
+///
+/// Example:
+/// ```dart
+/// // Check iOS compatibility
+/// final platform = PackagePlatform.ios;
+/// print(platform.platformName); // Output: 'ios'
+///
+/// // Check multiple platforms
+/// final platforms = [PackagePlatform.android, PackagePlatform.ios];
+/// ```
+enum PackagePlatform {
+  android('android'),
+  ios('ios'),
+  windows('windows'),
+  macos('macos'),
+  linux('linux'),
+  web('web');
+
+  /// Platform name as used by pub.dev and package metadata.
+  final String platformName;
+
+  const PackagePlatform(this.platformName);
+}
+
+/// Enum representing platform compatibility status for a package.
+///
+/// Used to indicate whether a package supports a specific platform.
+///
+/// Example:
+/// ```dart
+/// // Get status display information
+/// final status = PlatformStatus.supported;
+/// print(status.label()); // Output: 'Supported'
+/// print(status.icon(true)); // Output: '✅'
+/// ```
+enum PlatformStatus { supported, notSupported, unknown }
+
+/// UI helper extensions for [PlatformStatus].
+///
+/// Provides methods to format platform status for display in console output.
+///
+/// Example:
+/// ```dart
+/// final status = PlatformStatus.supported;
+/// print(status.format(true)); // Output: '✅ Supported'
+/// print(status.format(false)); // Output: 'Y Supported'
+/// ```
+extension PlatformStatusUi on PlatformStatus {
+  /// Returns an icon or character representation of the status.
+  ///
+  /// - [showIcon]: When true, returns emoji icons. When false, returns single
+  ///   character representation.
+  ///
+  /// Example:
+  /// ```dart
+  /// PlatformStatus.supported.icon(true); // Returns: '✅'
+  /// PlatformStatus.notSupported.icon(false); // Returns: 'N'
+  /// PlatformStatus.unknown.icon(true); // Returns: '❔'
+  /// ```
+  String icon(bool showIcon) => _icon(showIcon);
+
+  /// Returns a human-readable label for the status.
+  ///
+  /// Example:
+  /// ```dart
+  /// PlatformStatus.supported.label(); // Returns: 'Supported'
+  /// PlatformStatus.notSupported.label(); // Returns: 'Not Supported'
+  /// ```
+  String label() => _label();
+
+  /// Formats the status with icon and label for display.
+  ///
+  /// - [showIcon]: Controls whether to include emoji icons in the output.
+  ///
+  /// Example:
+  /// ```dart
+  /// PlatformStatus.supported.format(true); // Returns: '✅ Supported'
+  /// ```
+  String format(bool showIcon) => _format(showIcon);
+}
+
+/// Color styling extensions for [PlatformStatus].
+///
+/// Provides terminal color codes for displaying status in console output.
+extension PlatformStatusStyle on PlatformStatus {
+  /// Returns the background color code for table display.
+  ///
+  /// Used when displaying status in table body cells.
+  String background() => _background();
+
+  /// Returns the foreground color code for summary display.
+  ///
+  /// Used when displaying status in summary rows.
+  String foreground() => _foreground();
+}
+
+/// String helper to center text within a fixed width.
+///
+/// Example:
+/// ```dart
+/// 'hello'.center(11); // Returns: '   hello   '
+/// 'world'.center(10); // Returns: '  world   '
+/// ```
 extension StringCenter on String {
-  String center(int width) {
-    int padding = (width - length) ~/ 2;
-    int remainder = (width - length) % 2;
-    return ' ' * padding + this + ' ' * (padding + remainder);
-  }
+  String center(int width) => _center(width);
 }
 
-extension StatusIcon on String {
-  String iconStatus(bool showIcon) {
-    switch (this) {
-      case '✅':
-        return showIcon ? '✅' : 'Y';
-      case '❌':
-        return showIcon ? '❌' : 'N';
-      case '❔':
-        return showIcon ? '❔' : '?';
-      default:
-        return this; // Default to the original string if it doesn't match
-    }
-  }
-}
-
-extension StatusLabel on String {
-  String labelStatus(bool showIcon) {
-    switch (this) {
-      case '✅':
-        return 'Supported';
-      case '❌':
-        return 'Not Supported';
-      case '❔':
-        return 'Unknown';
-      default:
-        return this; // Default to the original string if it doesn't match
-    }
-  }
-}
-
-extension StatusFormatter on String {
-  String statusFormat(bool showIcon) {
-    return '${iconStatus(showIcon)} ${labelStatus(showIcon)}';
-  }
-}
-
-/// A class to check the compatibility of packages with specified platforms.
+/// A utility class for checking Dart/Flutter package compatibility across platforms.
+///
+/// This class analyzes dependencies from `pubspec.yaml` and checks their
+/// compatibility with specified platforms by querying pub.dev metadata.
+///
+/// Example:
+/// ```dart
+/// final checker = PackageChecker();
+///
+/// // Check a single platform
+/// await checker.checkPlatform(
+///   PackagePlatform.ios,
+///   showLink: true,
+///   showIcon: true,
+/// );
+///
+/// // Check multiple platforms
+/// await checker.checkAll(
+///   [PackagePlatform.android, PackagePlatform.ios, PackagePlatform.web],
+///   showLink: false,
+/// );
+/// ```
 class PackageChecker {
-  /// Checks compatibility for a single [PackagePlatform].
+  /// Checks package compatibility for a single platform.
   ///
-  /// Iterates through the specified platform, fetches its name, and validates the packages.
-  Future<void> checkPlatform(PackagePlatform platform) async {
-    var checkedPlatforms =
-        platforms.where((element) => element['id'] == platform);
-    var platformNames =
-        checkedPlatforms.map((platform) => platform['name'] as String).toList();
-    checkAll(platformNames);
+  /// This method analyzes all dependencies in your pubspec.yaml and checks
+  /// their compatibility with the specified [platform].
+  ///
+  /// - [platform]: The platform to check compatibility for.
+  /// - [showLink]: If `true`, includes pub.dev package links in the output.
+  /// - [showIcon]: If `true`, displays platform status using emoji icons.
+  ///
+  /// Example:
+  /// ```dart
+  /// final checker = PackageChecker();
+  /// await checker.checkPlatform(
+  ///   PackagePlatform.ios,
+  ///   showLink: true,
+  ///   showIcon: true,
+  /// );
+  ///
+  /// // Sample output:
+  /// // ------------------------------------------
+  /// // Package Name        |   ios    | link                   |
+  /// // ------------------------------------------
+  /// // provider           |   ✅     | https://pub.dev/packages/provider |
+  /// // http               |   ✅     | https://pub.dev/packages/http     |
+  /// // ------------------------------------------
+  /// ```
+  Future<void> checkPlatform(
+    PackagePlatform platform, {
+    bool showLink = false,
+    bool showIcon = true,
+  }) async {
+    await _checkPlatformImpl(
+      platform,
+      showLink: showLink,
+      showIcon: showIcon,
+    );
   }
 
-  /// Checks compatibility for a single platform by its [platformName].
+  /// Checks package compatibility for multiple platforms.
   ///
-  /// - [platformName]: The name of the platform (e.g., "android", "ios").
-  /// - [showLink]: If true, includes links to package details in the output.
-  /// - [showIcon]: If true, show platform status as icon.
-
-  Future<void> check(String platformName,
-      {bool showLink = false, bool showIcon = false}) async {
-    checkAll([platformName], showLink: showLink, showIcon: showIcon);
+  /// Analyzes all dependencies and displays a compatibility table for the
+  /// specified [platforms].
+  ///
+  /// - [platforms]: List of platforms to check compatibility for.
+  /// - [showLink]: If `true`, includes pub.dev package links in the output.
+  /// - [showIcon]: If `true`, displays platform status using emoji icons.
+  ///
+  /// Example:
+  /// ```dart
+  /// final checker = PackageChecker();
+  /// await checker.checkAll(
+  ///   [PackagePlatform.android, PackagePlatform.ios, PackagePlatform.web],
+  ///   showLink: true,
+  ///   showIcon: false,
+  /// );
+  ///
+  /// // Sample output:
+  /// // ---------------------------------------------------------
+  /// // Package Name        | android |   ios    |   web    | link                   |
+  /// // ---------------------------------------------------------
+  /// // provider           |    Y    |    Y     |    N     | https://pub.dev/packages/provider |
+  /// // http               |    Y    |    Y     |    Y     | https://pub.dev/packages/http     |
+  /// // ---------------------------------------------------------
+  /// // ✅ Supported       |    2    |    2     |    1     |                        |
+  /// // ❌ Not Supported   |    0    |    0     |    1     |                        |
+  /// // ❔ Unknown         |    0    |    0     |    0     |                        |
+  /// // ---------------------------------------------------------
+  /// ```
+  Future<void> checkAll(
+    List<PackagePlatform> platforms, {
+    bool showLink = false,
+    bool showIcon = true,
+  }) async {
+    await _checkAllImpl(
+      platforms,
+      showLink: showLink,
+      showIcon: showIcon,
+    );
   }
 
-  /// Checks compatibility for all provided [platformNames].
-  ///
-  /// - [platformNames]: A list of platform names in array form to validate.
-  /// - [showLink]: If true, includes links to package details in the output.
-  /// - [showIcon]: If true, show platform status as icon.
-  Future<void> checkAll(List<String> platformNames,
-      {bool showLink = false, bool showIcon = true}) async {
+  // Implementation details are hidden from API documentation
+  Future<void> _checkPlatformImpl(
+    PackagePlatform platform, {
+    bool showLink = false,
+    bool showIcon = true,
+  }) async {
+    await _checkAllImpl(
+      [platform],
+      showLink: showLink,
+      showIcon: showIcon,
+    );
+  }
+
+  Future<void> _checkAllImpl(
+    List<PackagePlatform> platforms, {
+    bool showLink = false,
+    bool showIcon = true,
+  }) async {
     // Start stopwatch to measure elapsed time
-    Stopwatch stopwatch = Stopwatch()..start();
+    final stopwatch = Stopwatch()..start();
 
     // Print "Checking..." with elapsed time in seconds
-    var timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    final timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       stdout.write(
-          '\r${blue}Checking compatibility... ($reset${(stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1)}s$blue)$reset');
+        '\r${blue}Checking compatibility... '
+        '($reset${(stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1)}s'
+        '$blue)$reset',
+      );
     });
 
     // Initialize the pubspec reader and platform checker.
     final reader = PubspecReader();
-    final checker = PlatformChecker(platformNames);
+    final checker = PlatformChecker(platforms);
 
     final dependencies = reader.getDependencies();
-    final compatibility = await checker.checkPackageCompatibility(dependencies);
+    final compatibility =
+        await checker.checkDependenciesCompatibility(dependencies);
 
-    // Stop the stopwatch and the periodic timer
+    // Stop timers
     stopwatch.stop();
     timer.cancel();
-
-    // Clear the "Checking..." line and print the final message
-    stdout.write('\r'); // Clear the current line
-    //print('\nCompatibility check completed in ${(stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1)}s.');
+    stdout.write('\r');
 
     if (compatibility.entries.isEmpty) {
       print('$red No package(s) found in pubspec.yaml$reset');
       return;
     }
 
-    List<MapEntry<String, Map<String, dynamic>>> unknownList = [];
+    // Track unknown packages
+    final List<MapEntry<String, PackageCompatibility>> unknownList = [];
 
-    // Determine the maximum width for the first column
+    // Determine column width
     int maxWidth = compatibility.entries
         .map((pkg) => pkg.key.length)
         .reduce((a, b) => a > b ? a : b);
 
-    if (maxWidth < 15) {
-      maxWidth = 15;
-    }
+    if (maxWidth < 15) maxWidth = 15;
 
-    int linkWidth = 25 + maxWidth;
+    final linkWidth = 25 + maxWidth;
 
     // Header separator width
     int separatorWidth =
-        maxWidth + 2 + (platformNames.length * 10) + platformNames.length + 1;
+        maxWidth + 2 + (platforms.length * 10) + platforms.length + 1;
     if (showLink) separatorWidth += linkWidth + 3;
+
     // Initialize counters for summary
-    Map<String, Map<String, int>> platformCounts = {
-      for (var platform in platformNames) platform: {'✅': 0, '❌': 0, '❔': 0}
+    final Map<PackagePlatform, Map<PlatformStatus, int>> platformCounts = {
+      for (final platform in platforms)
+        platform: {
+          PlatformStatus.supported: 0,
+          PlatformStatus.notSupported: 0,
+          PlatformStatus.unknown: 0,
+        }
     };
 
-    // Print the header separator
+    // Print header
     print('-' * separatorWidth);
 
-    // Print the header row
     String header = 'Package Name'.padRight(maxWidth + 2) +
-        platformNames.map((p) => '| ${p.center(8)} ').join();
+        platforms.map((p) => '| ${p.platformName.center(8)} ').join();
+
     if (showLink) header += '| ${'link'.center(linkWidth)} ';
     header += '|';
     print(header);
 
-    // Print another separator
     print('-' * separatorWidth);
 
+    // Print rows
     for (final entry in compatibility.entries) {
-      List<String> supportedPlatforms = entry.value['platforms'];
-      String packageName = entry.key.padRight(maxWidth + 2);
+      final supportedPlatforms = entry.value.platforms;
+
+      final packageName = entry.key.padRight(maxWidth + 2);
 
       String color = (supportedPlatforms.isEmpty) ? yellow : '';
 
-      String row = '$color$packageName$reset${platformNames.map((platform) {
-        String status = '❔';
+      String row = '$color$packageName$reset${platforms.map((platform) {
+        PlatformStatus status = PlatformStatus.unknown;
+
         if (supportedPlatforms.isNotEmpty) {
-          status = (supportedPlatforms.contains(platform)) ? '✅' : '❌';
-          color = (supportedPlatforms.contains(platform)) ? greenBg : redBg;
+          status = supportedPlatforms.contains(platform)
+              ? PlatformStatus.supported
+              : PlatformStatus.notSupported;
         } else {
-          status = '❔';
-          color = yellowBg;
           unknownList.add(entry);
         }
-        // Increment the counts for the current platform
-        platformCounts[platform]?[status] =
-            (platformCounts[platform]?[status] ?? 0) + 1;
 
-        if (showIcon) {
-          return '| ${status.center(8)} ';
-        } else {
-          return '| $color${status.iconStatus(showIcon).center(8)}$reset ';
-        }
+        platformCounts[platform]![status] =
+            platformCounts[platform]![status]! + 1;
+
+        final bg = showIcon ? status.foreground() : status.background();
+        return '| $bg${status.icon(showIcon).center(8)}$reset ';
       }).join()}';
-      // Add link column if enabled
+
       if (showLink) {
-        String link = 'https://pub.dev/packages/${entry.key}';
+        final link = 'https://pub.dev/packages/${entry.key}';
         row += '| ${link.padRight(linkWidth)} ';
       }
+
       row += '|';
       print(row);
     }
 
     print('-' * separatorWidth);
 
-    // Print the summary rows
-    for (var status in ['✅', '❌', '❔']) {
-      String summaryLabel = status.statusFormat(showIcon);
-      String color = status == '✅'
-          ? green
-          : status == '❌'
-              ? red
-              : yellow;
-      String summaryRow =
-          '$color${summaryLabel.padRight(maxWidth + 2)}$reset${platformNames.map((platform) {
-        int count = platformCounts[platform]?[status] ?? 0;
-        String countOf = (count != compatibility.entries.length && count != 0)
-            ? '$count/${compatibility.entries.length}'
-            : count.toString();
-        return '| $color${countOf.center(8)}$reset ';
-      }).join()}';
+    // Summary rows
+    for (final status in PlatformStatus.values) {
+      final color = status.foreground();
+      final summaryLabel =
+          '$color${status.format(showIcon).padRight(maxWidth + 2)}$reset';
 
-      if (showLink) summaryRow += '| ${''.padRight(linkWidth)} ';
+      String summaryRow = summaryLabel +
+          platforms.map((platform) {
+            final count = platformCounts[platform]![status]!;
+            final value = (count != compatibility.entries.length && count != 0)
+                ? '$count/${compatibility.entries.length}'
+                : count.toString();
+
+            return '| $color${value.center(8)}$reset ';
+          }).join();
+
+      if (showLink) {
+        summaryRow += '| ${''.padRight(linkWidth)} ';
+      }
+
       summaryRow += '|';
       print(summaryRow);
     }
 
-    // Print the final separator
     print('-' * separatorWidth);
+
     if (unknownList.isNotEmpty) {
       print(
-          '$yellow${'❔'.iconStatus(showIcon)}  unknown packages, you need to check it manually in the link$reset');
+        '$yellow${PlatformStatus.unknown.icon(showIcon)} '
+        'unknown packages, you need to check it manually in the link$reset',
+      );
     }
 
-    // Log the end of the compatibility check.
+    // Log completion
     print(
-        '${blue}Checking compatibility completed in ($reset${(stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1)}s$blue)$reset');
+      '${blue}Checking compatibility completed in '
+      '($reset${(stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1)}s'
+      '$blue)$reset',
+    );
+  }
+}
+
+// Hidden implementation extensions
+extension _PlatformStatusUiImpl on PlatformStatus {
+  String _icon(bool showIcon) => switch (this) {
+        PlatformStatus.supported => showIcon ? '✅' : 'Y',
+        PlatformStatus.notSupported => showIcon ? '❌' : 'N',
+        PlatformStatus.unknown => showIcon ? '❔' : '?',
+      };
+
+  String _label() => switch (this) {
+        PlatformStatus.supported => 'Supported',
+        PlatformStatus.notSupported => 'Not Supported',
+        PlatformStatus.unknown => 'Unknown',
+      };
+
+  String _format(bool showIcon) => '${_icon(showIcon)} ${_label()}';
+}
+
+extension _PlatformStatusStyleImpl on PlatformStatus {
+  String _background() => switch (this) {
+        PlatformStatus.supported => greenBg,
+        PlatformStatus.notSupported => redBg,
+        PlatformStatus.unknown => yellowBg,
+      };
+
+  String _foreground() => switch (this) {
+        PlatformStatus.supported => green,
+        PlatformStatus.notSupported => red,
+        PlatformStatus.unknown => yellow,
+      };
+}
+
+extension _StringCenterImpl on String {
+  String _center(int width) {
+    int padding = (width - length) ~/ 2;
+    int remainder = (width - length) % 2;
+    return ' ' * padding + this + ' ' * (padding + remainder);
   }
 }

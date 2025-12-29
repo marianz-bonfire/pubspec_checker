@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://pub.dev/packages/pubspec_checker">
-    <img height="260" src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/logo.png">
+    <img height="260" src="https://raw.githubusercontent.com/marianz-bonfire/tarsier_assets/master/package-assets/pubspec_checker/logo.png">
   </a>
   <h1 align="center">Pubspec Checker</h1>
 </p>
@@ -45,7 +45,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-cli.png">
+<img src="https://raw.githubusercontent.com/marianz-bonfire/tarsier_assets/master/package-assets/pubspec_checker/screenshots/demo-cli.png">
 
 
 ## ✨ Features
@@ -140,14 +140,14 @@ Example output showing status platform as icon (`-s`):
 ```bash
 dart run pubspec_checker -l -s
 ```
-<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-cli-icon.png">
+<img src="https://raw.githubusercontent.com/marianz-bonfire/tarsier_assets/master/package-assets/pubspec_checker/screenshots/demo-cli-icon.png">
 
 Example output showing status platform by default (_without_ `-s`):
 ```bash
 dart run pubspec_checker -l
 ```
 
-<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-cli-default.png">
+<img src="https://raw.githubusercontent.com/marianz-bonfire/tarsier_assets/master/package-assets/pubspec_checker/screenshots/demo-cli-default.png">
 
 NOTE: 📝 By default we use ASCII characters (e.g., `Y`, `N`, `?`) on platform status indicator to ensure proper alignment across different terminals such: (_Command Prompt, PowerShell, Linux Terminal, Git Bash_, etc). Emojis like ✅, ❌, and ❔ can sometimes have variable widths depending on the terminal or font.
 
@@ -223,7 +223,7 @@ void main() async {
 
 Sample Output:
 
-<img src="https://raw.githubusercontent.com/marianz-bonfire/pubspec_checker/master/assets/demo-example.png">
+<img src="https://raw.githubusercontent.com/marianz-bonfire/tarsier_assets/master/package-assets/pubspec_checker/screenshots/demo-example.png">
 
 ## 🔧 How It Works
 ### Platform Detection Strategies

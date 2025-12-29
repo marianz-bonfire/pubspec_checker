@@ -20,10 +20,14 @@ Future<void> main(List<String> arguments) async {
       PackagePlatform.values.map((platform) => platform).toList();
   if (platformsToCheck.isNotEmpty) {
     // Filtered only available platforms
-
-    platforms = PackagePlatform.values
-        .where((platform) => platformsToCheck.contains(platform.platformName))
+    List<PackagePlatform> allPlatforms = PackagePlatform.values
+        .where((platform) => platformsToCheck.contains('all'))
         .toList();
+    if (allPlatforms.isEmpty) {
+      platforms = PackagePlatform.values
+          .where((platform) => platformsToCheck.contains(platform.platformName))
+          .toList();
+    }
   }
   await PackageChecker()
       .checkAll(platforms, showLink: showLinks, showIcon: showIcon);

@@ -56,9 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final dependencies = reader.getDependencies();
     Console.error(jsonEncode(dependencies));
-    //results = await checker!.checkDependenciesCompatibility(dependencies);
-    results =
-        await checker!.checkPackagesCompatibility(['tarsier_loggers', 'http']);
+    results = await checker!.checkDependenciesCompatibility(dependencies);
+    //results = await checker!.checkPackagesCompatibility(['tarsier_loggers', 'http']);
 
     for (var package in results.entries) {
       Console.success(
